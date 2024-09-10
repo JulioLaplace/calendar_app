@@ -1,4 +1,4 @@
-import { BigCalendar } from "./Components";
+import BigCalendar from "./components/BigCalendar";
 import "./App.css";
 
 function App() {
