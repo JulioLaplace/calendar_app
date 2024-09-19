@@ -51,8 +51,8 @@ function App() {
   }, []);
 
   return (
-    <div style={{ height: "100vh", display: "flex" }}>
-      <div style={{ flexGrow: 2 }}>
+    <div className="all-the-view-box">
+      <div className="calendar-box">
         <BigCalendar
           events={events}
           onSelectEvent={handleSelectEvent}
