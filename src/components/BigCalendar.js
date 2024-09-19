@@ -3,13 +3,7 @@ import moment from "moment";
 
 const localizer = momentLocalizer(moment);
 
-const events = [{
-  start: moment("2024-09-16T10:00:00").toDate(),
-  end: moment("2024-09-16T12:00:00").toDate(),
-  title: "Ui Specification Meeting"
-}]
-
-function BigCalendar() {
+function BigCalendar({ events, onSelectEvent, onSelectSlot }) {
   return (
     <Calendar
       localizer={localizer}
@@ -17,6 +11,9 @@ function BigCalendar() {
       startAccessor="start"
       endAccessor="end"
       views={["month", "week", "day"]}
+      onSelectEvent={onSelectEvent}
+      selectable={true}
+      onSelectSlot={onSelectSlot}
     />
   );
 }

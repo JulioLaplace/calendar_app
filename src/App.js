@@ -1,71 +1,87 @@
+import React, { useState, useCallback } from "react";
 import BigCalendar from "./components/BigCalendar";
+import AddEventForm from "./components/AddEventForm";
+import EventDetails from "./components/EventDetails";
+import moment from "moment";
 import "./App.css";
-import React, {useState} from "react";
-
 
 function App() {
-    const [isEventOverviewOpen, setIsEventOverviewOpen] = useState(false);
-    const toggleEventOverview = () => {
-        setIsEventOverviewOpen(!isEventOverviewOpen);
-    };
+	const [isEventOverviewOpen, setIsEventOverviewOpen] = useState(false);
+	const [isAddEventFormOpen, setIsAddEventFormOpen] = useState(false);
+	const [events, setEvents] = useState([]);
+	const [selectedEvent, setSelectedEvent] = useState(null);
+	const [newEventStart, setNewEventStart] = useState("");
+	const [newEventEnd, setNewEventEnd] = useState("");
 
-  return (
-      <div style={{ height: "100vh", display: "flex" }}>
-          <div style={{ flexGrow: 2 }}>
-              <BigCalendar />
-          </div>
+	const toggleEventOverview = useCallback(() => {
+		setIsEventOverviewOpen(prev => !prev);
+		setIsAddEventFormOpen(false);
+		setSelectedEvent(null);
+		setNewEventStart("");
+		setNewEventEnd("");
+	}, []);
 
-          <button
-              onClick={toggleEventOverview}
-              style={{
-                  position: "absolute",
-                  bottom: "20px",
-                  right: "20px",
-                  zIndex: 1,
-                  padding: "10px 20px",
-                  fontSize: "15px",
-                  backgroundColor: "#3173ac",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  outline: "none",
-              }}>
-              {isEventOverviewOpen ? "x" : "+"}
-          </button>
+	const handleAddEvent = useCallback((newEvent) => {
+		setEvents(prev => [...prev, newEvent]);
+		setIsAddEventFormOpen(false);
+		setSelectedEvent(null);
+	}, []);
 
-          {isEventOverviewOpen && (
-              <div
-                  style={{
-                      width: "300px",
-                      backgroundColor: "#ffffff",
-                      borderLeft: "1px solid black",
-                      boxSizing: "border-box",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "flex-start",
-                      padding: "20px",
-                      height: "100vh",
-                  }}>
-                  <div
-                      style={{
-                          textAlign: "center",
-                          fontSize: "1.5rem",
-                          marginBottom: "20px",
-                      }}>
-                      Event Overview
-                  </div>
-                  <div
-                      style={{
-                          marginTop: "20px",
-                          textAlign: "center",
-                      }}>
-                      Insert Event Information Here
-                  </div>
-              </div>
-          )}
-      </div>
-  );
+	const handleSelectEvent = useCallback((event) => {
+		setSelectedEvent(event);
+		setIsEventOverviewOpen(true);
+		setIsAddEventFormOpen(false);
+		setNewEventStart("");
+		setNewEventEnd("");
+	}, []);
+
+	const handleSelectSlot = useCallback(({ start, end }) => {
+		setNewEventStart(moment(start).format("YYYY-MM-DDTHH:mm"));
+		setNewEventEnd(moment(end).format("YYYY-MM-DDTHH:mm"));
+		setIsAddEventFormOpen(true);
+		setIsEventOverviewOpen(true);
+		setSelectedEvent(null);
+	}, []);
+
+	const handleCloseAddEventForm = useCallback(() => {
+		setIsAddEventFormOpen(false);
+		setNewEventStart("");
+		setNewEventEnd("");
+		setSelectedEvent(null);
+	}, []);
+
+	return (
+		<div style={{ height: "100vh", display: "flex" }}>
+			<div style={{ flexGrow: 2 }}>
+				<BigCalendar 
+					events={events} 
+					onSelectEvent={handleSelectEvent} 
+					onSelectSlot={handleSelectSlot}
+				/>
+			</div>
+
+			{/* event overview button */}
+			<button onClick={toggleEventOverview} className="toggle-overview-button">
+				{isEventOverviewOpen ? "x" : "+"}
+			</button>
+
+			{isEventOverviewOpen && (
+				<div className="event-overview">
+					<div className="event-overview-title">Event Details</div>
+					{isAddEventFormOpen ? (
+						<AddEventForm 
+							onAddEvent={handleAddEvent} 
+							onClose={handleCloseAddEventForm}
+							initialStart={newEventStart}
+							initialEnd={newEventEnd}
+						/>
+					) : (
+						<EventDetails event={selectedEvent} />
+					)}
+				</div>
+			)}
+		</div>
+	);
 }
 
 export default App;
