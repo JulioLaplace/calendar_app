@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
-import BigCalendar from "./components/BigCalendar";
-import AddEventForm from "./components/AddEventForm";
-import EventDetails from "./components/EventDetails";
+import BigCalendar from "./components/BigCalendarComponent/BigCalendar";
+import AddEventForm from "./components/AddEventFormComponent/AddEventForm";
+import EventDetails from "./components/EventDetailsComponent/EventDetails";
 import moment from "moment";
 import "./App.css";
 
