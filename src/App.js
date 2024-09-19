@@ -60,7 +60,7 @@ function App() {
         />
       </div>
 
-      {/* event overview button */}
+      {/* Event overview button */}
       <button onClick={toggleEventOverview} className="toggle-overview-button">
         {isEventOverviewOpen ? "x" : "+"}
       </button>
