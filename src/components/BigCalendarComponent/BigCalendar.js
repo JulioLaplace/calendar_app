@@ -7,8 +7,11 @@ import Toolbar from "../ToolbarComponent/Toolbar"; // import toolbar component
 
 const localizer = momentLocalizer(moment);
 
-// custom toolbar component 
-
+moment.updateLocale('en', {
+    week: {
+        dow: 1, // 1 stands for Monday
+    },
+});
 
 function BigCalendar({ events, onSelectEvent, onSelectSlot }) {
   return (
