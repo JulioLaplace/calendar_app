@@ -1,7 +1,14 @@
+import React from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "./BigCalendar.css";
+import Toolbar from "../ToolbarComponent/Toolbar"; // import toolbar component  
 
 const localizer = momentLocalizer(moment);
+
+// custom toolbar component 
+
 
 function BigCalendar({ events, onSelectEvent, onSelectSlot }) {
   return (
@@ -14,6 +21,9 @@ function BigCalendar({ events, onSelectEvent, onSelectSlot }) {
       onSelectEvent={onSelectEvent}
       selectable={true}
       onSelectSlot={onSelectSlot}
+      components={{
+        toolbar: Toolbar // 
+      }}
     />
   );
 }
