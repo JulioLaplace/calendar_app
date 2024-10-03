@@ -12,6 +12,40 @@
 
 .event-overview-title {
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 20px;
     margin-bottom: 20px;
+}
+
+.event-details {
+    padding: 20px;
+    background-color: #ebebec;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+}
+
+.event-title {
+    font-size: 16px;
+    color: #074759;
+    margin-bottom: 10px;
+}
+
+.event-info p {
+    margin: 8px 0;
+    font-size: 14px;
+    white-space: normal;
+}
+
+.event-info strong {
+    color: #5f97ba;
+}
+
+.no-event {
+    padding: 20px;
+    text-align: center;
+    color: #777;
+    background-color: #ebebec;
+    border-radius: 8px;
 }
