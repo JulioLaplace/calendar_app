@@ -44,12 +44,10 @@
 
 .calendar-box {
   flex: 1;
-  padding: 10px;
   overflow: hidden;
 }
 
 .event-overview-box {
-  width: 0;
   max-width: 300px;
   overflow: hidden;
   transition: transform 0.5s ease, width 0.5s ease;
@@ -71,12 +69,41 @@
   bottom: 20px;
   right: 20px;
   z-index: 1;
-  padding: 10px 20px;
-  font-size: 15px;
   background-color: #3173ac;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  outline: none;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.5s ease;
+}
+
+.toggle-overview-button::before,
+.toggle-overview-button::after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 2px;
+  background-color: white;
+  transition: transform 0.3s ease;
+}
+
+.toggle-overview-button::before {
+  transform: rotate(0deg);
+}
+
+.toggle-overview-button::after {
+  transform: rotate(90deg);
+}
+
+.toggle-overview-button.opened::before {
+  transform: rotate(45deg);
+}
+
+.toggle-overview-button.opened::after {
+  transform: rotate(-45deg);
 }

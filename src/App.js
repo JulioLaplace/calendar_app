@@ -61,8 +61,8 @@ function App() {
         />
       </div>
 
-      <button onClick={toggleEventOverview} className="toggle-overview-button">
-        {isEventOverviewOpen ? "x" : "+"}
+      <button
+          onClick={toggleEventOverview} className={`toggle-overview-button ${isEventOverviewOpen ? 'opened' : ''}`} >
       </button>
 
       <div className={`event-overview-box ${isEventOverviewOpen ? 'open' : 'closed'}`}>
