@@ -2,6 +2,7 @@ import React, {useState, useCallback, useEffect} from "react";
 import BigCalendar from "./components/BigCalendarComponent/BigCalendar";
 import AddEventForm from "./components/AddEventFormComponent/AddEventForm";
 import EventDetails from "./components/EventDetailsComponent/EventDetails";
+import {getAllEventsFromFirestore} from "./Services/eventService";
 import moment from "moment";
 import "./App.css";
 
@@ -14,7 +15,7 @@ function App() {
 
     return () => {
       console.log("afterunload");
-
+      console.log(getAllEventsFromFirestore());
       window.onbeforeunload = null;
     };
   }, []);

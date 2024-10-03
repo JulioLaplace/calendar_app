@@ -2,6 +2,7 @@ import {
   collection,
   addDoc,
   getDoc,
+  getDocs,
   setDoc,
   doc,
   updateDoc,
@@ -53,10 +54,14 @@ export const deleteEventFromFirestore = async (eventId) => {
 
 // Get all events from firestore
 export const getAllEventsFromFirestore = async () => {
+  const events = [];
   try {
     const collectionRef = collection(db, "events");
     const querySnapshot = await getDoc(collectionRef);
-    const events = querySnapshot.data();
+    querySnapshot.forEach((doc => {
+      events.push(doc.data())
+    }))
+    // const events = querySnapshot.docs.map();
     return events;
   } catch (e) {
     console.error("Error getting documents: ", e);
