@@ -43,5 +43,40 @@
 }
 
 .calendar-box {
-  flex-grow: 2;
+  flex: 1;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.event-overview-box {
+  width: 0;
+  max-width: 300px;
+  overflow: hidden;
+  transition: transform 0.5s ease, width 0.5s ease;
+  transform: translateX(100%);
+}
+
+.event-overview-box.open {
+  width: 300px;
+  transform: translateX(0);
+}
+
+.event-overview-box.closed {
+  width: 0;
+  transform: translateX(100%);
+}
+
+.toggle-overview-button {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1;
+  padding: 10px 20px;
+  font-size: 15px;
+  background-color: #3173ac;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
 }

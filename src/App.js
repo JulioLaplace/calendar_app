@@ -61,26 +61,25 @@ function App() {
         />
       </div>
 
-      {/* event overview button */}
       <button onClick={toggleEventOverview} className="toggle-overview-button">
         {isEventOverviewOpen ? "x" : "+"}
       </button>
 
-      {isEventOverviewOpen && (
+      <div className={`event-overview-box ${isEventOverviewOpen ? 'open' : 'closed'}`}>
         <div className="event-overview">
           <div className="event-overview-title">Event Details</div>
           {isAddEventFormOpen ? (
-            <AddEventForm
-              onAddEvent={handleAddEvent}
-              onClose={handleCloseAddEventForm}
-              initialStart={newEventStart}
-              initialEnd={newEventEnd}
-            />
+              <AddEventForm
+                  onAddEvent={handleAddEvent}
+                  onClose={handleCloseAddEventForm}
+                  initialStart={newEventStart}
+                  initialEnd={newEventEnd}
+              />
           ) : (
-            <EventDetails event={selectedEvent} />
+              <EventDetails event={selectedEvent} />
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
