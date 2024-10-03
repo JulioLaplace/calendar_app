@@ -13,9 +13,10 @@ function App() {
       return true;
     };
 
-    return () => {
+    return async () => {
       console.log("afterunload");
-      console.log(getAllEventsFromFirestore());
+      const events = await getAllEventsFromFirestore();
+      console.log(events);
       window.onbeforeunload = null;
     };
   }, []);

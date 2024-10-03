@@ -57,11 +57,10 @@ export const getAllEventsFromFirestore = async () => {
   const events = [];
   try {
     const collectionRef = collection(db, "events");
-    const querySnapshot = await getDoc(collectionRef);
+    const querySnapshot = await getDocs(collectionRef);
     querySnapshot.forEach((doc => {
       events.push(doc.data())
     }))
-    // const events = querySnapshot.docs.map();
     return events;
   } catch (e) {
     console.error("Error getting documents: ", e);
