@@ -2,6 +2,7 @@ import {
   collection,
   addDoc,
   getDoc,
+  setDoc,
   doc,
   updateDoc,
   deleteDoc,
@@ -12,9 +13,52 @@ import { db } from "../firebase";
 export const addNewEventToFirestore = async (event) => {
   try {
     const collectionRef = collection(db, "events");
-    const docRef = await addDoc(collectionRef, event);
+
+    // Create a new document in the collection with a random id
+    const docRef = doc(collectionRef);
+
+    // Get the generated id of the document before adding the event
+    const generatedId = docRef.id;
+
+    event.id = generatedId;
+    // Add the event to the database
+    await setDoc(docRef, event);
+    // const docRef = await addDoc(collectionRef, event);
     console.log("Document written with ID: ", docRef.id);
   } catch (e) {
     console.error("Error adding document: ", e);
+  }
+};
+
+// Edit an existing event in firestore
+export const editEventInFirestore = async (event) => {
+  try {
+    const eventRef = doc(db, "events", event.id);
+    await updateDoc(eventRef, event);
+    console.log("Document updated with ID: ", event.id);
+  } catch (e) {
+    console.error("Error updating document: ", e);
+  }
+};
+
+// Delete an event from firestore
+export const deleteEventFromFirestore = async (eventId) => {
+  try {
+    await deleteDoc(doc(db, "events", eventId));
+    console.log("Document deleted with ID: ", eventId);
+  } catch (e) {
+    console.error("Error deleting document: ", e);
+  }
+};
+
+// Get all events from firestore
+export const getAllEventsFromFirestore = async () => {
+  try {
+    const collectionRef = collection(db, "events");
+    const querySnapshot = await getDoc(collectionRef);
+    const events = querySnapshot.data();
+    return events;
+  } catch (e) {
+    console.error("Error getting documents: ", e);
   }
 };
