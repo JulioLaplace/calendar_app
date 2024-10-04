@@ -1,0 +1,33 @@
+
+.toggle-overview-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1;
+    padding: 10px 20px;
+    font-size: 15px;
+    background-color: #3173ac;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+}
+
+.event-overview {
+    width: 300px;
+    background-color: #ffffff;
+    border-left: 1px solid black;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 20px;
+    height: 100vh;
+}
+
+.event-overview-title {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
