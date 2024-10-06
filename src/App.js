@@ -1,12 +1,26 @@
-import React, { useState, useCallback } from "react";
+import React, {useState, useCallback, useEffect} from "react";
 import BigCalendar from "./components/BigCalendarComponent/BigCalendar";
 import AddEventForm from "./components/AddEventFormComponent/AddEventForm";
 import EventDetails from "./components/EventDetailsComponent/EventDetails";
+import {getAllEventsFromFirestore} from "./Services/eventService";
 import './components/EventDetailsComponent/EventDetails.css';
 import moment from "moment";
 import "./App.css";
 
 function App() {
+  useEffect(() => {
+    window.onbeforeunload = function() {
+      console.log("beforeunload");
+      return true;
+    };
+
+    return async () => {
+      console.log("afterunload");
+      const events = await getAllEventsFromFirestore();
+      console.log(events);
+      window.onbeforeunload = null;
+    };
+  }, []);
   const [isEventOverviewOpen, setIsEventOverviewOpen] = useState(false);
   const [isAddEventFormOpen, setIsAddEventFormOpen] = useState(false);
   const [events, setEvents] = useState([]);
