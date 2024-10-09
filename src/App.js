@@ -6,17 +6,31 @@ import {getAllEventsFromFirestore} from "./Services/eventService";
 import moment from "moment";
 import "./App.css";
 
+const convert_events = (list_events) =>{
+  let list_events_calendar = [];
+  for (let event of list_events){
+    let calendarEvent= {
+      title: event.title,
+      start: event.start.toDate(),
+      end: event.end.toDate(),
+      content: event.content,
+    };
+    list_events_calendar.push(calendarEvent);
+  }
+  return list_events_calendar;
+}
+
 function App() {
   useEffect(() => {
     window.onbeforeunload = function() {
-      console.log("beforeunload");
       return true;
     };
 
     return async () => {
-      console.log("afterunload");
-      const events = await getAllEventsFromFirestore();
-      console.log(events);
+      const events_db = await getAllEventsFromFirestore();
+      console.log(events_db);
+      console.log(convert_events(events_db));
+      setEvents(convert_events(events_db));
       window.onbeforeunload = null;
     };
   }, []);
