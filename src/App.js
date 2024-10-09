@@ -3,6 +3,7 @@ import BigCalendar from "./components/BigCalendarComponent/BigCalendar";
 import AddEventForm from "./components/AddEventFormComponent/AddEventForm";
 import EventDetails from "./components/EventDetailsComponent/EventDetails";
 import {getAllEventsFromFirestore} from "./Services/eventService";
+import './components/EventDetailsComponent/EventDetails.css';
 import moment from "moment";
 import "./App.css";
 
