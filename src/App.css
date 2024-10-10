@@ -107,3 +107,22 @@
 .toggle-overview-button.opened::after {
   transform: rotate(-45deg);
 }
+
+.delete-event-button {
+  background-color: #2a679a;
+  color:white;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.delete-event-button.deleting {
+  background-color: red;
+}
+
+.delete-event-button:hover {
+  background-color: #2a679a;
+}

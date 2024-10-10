@@ -79,6 +79,21 @@ function App() {
     setSelectedEvent(null);
   }, []);
 
+  const handleDeleteEvent = useCallback(() => {
+    if (selectedEvent) {
+      setIsDeleting(true);
+
+      setTimeout(() => {
+        setEvents((prevEvents) =>
+          prevEvents.filter((Event) => Event !== selectedEvent)
+        );
+        setSelectedEvent(null);
+        setIsEventOverviewOpen(false);
+        setIsDeleting(false);
+      }, 1000);
+    }
+  }, [selectedEvent]);
+
   return (
     <div className="all-the-view-box">
       <div className="calendar-box">
