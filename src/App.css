@@ -43,5 +43,67 @@
 }
 
 .calendar-box {
-  flex-grow: 2;
+  flex: 1;
+  overflow: hidden;
+}
+
+.event-overview-box {
+  max-width: 300px;
+  overflow: hidden;
+  transition: transform 0.5s ease, width 0.5s ease;
+  transform: translateX(100%);
+}
+
+.event-overview-box.open {
+  width: 300px;
+  transform: translateX(0);
+}
+
+.event-overview-box.closed {
+  width: 0;
+  transform: translateX(100%);
+}
+
+.toggle-overview-button {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1;
+  background-color: #074759;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.5s ease;
+}
+
+.toggle-overview-button::before,
+.toggle-overview-button::after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 2px;
+  background-color: white;
+  transition: transform 0.3s ease;
+}
+
+.toggle-overview-button::before {
+  transform: rotate(0deg);
+}
+
+.toggle-overview-button::after {
+  transform: rotate(90deg);
+}
+
+.toggle-overview-button.opened::before {
+  transform: rotate(45deg);
+}
+
+.toggle-overview-button.opened::after {
+  transform: rotate(-45deg);
 }
