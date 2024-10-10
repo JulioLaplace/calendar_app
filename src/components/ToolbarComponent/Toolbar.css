@@ -5,10 +5,14 @@
   
   /* optional: add hover effect     */
   .rbc-toolbar button.middle-button:hover {
-    background-color: #4a86a9;
+    background-color: #074759;
   }
   
   /* optional: add active effect     */
   .rbc-toolbar button.middle-button:active {
-    background-color: #3c7598;
+    background-color: #074759;
   }
+
+.rbc-toolbar {
+    margin-top: 10px;
+}
