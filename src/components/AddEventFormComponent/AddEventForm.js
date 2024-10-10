@@ -122,7 +122,7 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
                 className="full-width" // Added class for full-width styling
             />
             {error && <p className="error-message">{error}</p>}
-            <button type="submit">
+            <button type="submit" onClick={handleAddEvent}>
                 Add Event
             </button>
             <button type="button" onClick={handleCancel}>
