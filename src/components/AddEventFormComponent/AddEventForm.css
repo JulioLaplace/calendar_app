@@ -59,3 +59,25 @@ button:hover {
     color: red;
     font-size: 0.9em;
 }
+
+.all-day-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+.all-day-checkbox label {
+    font-size: 14px;
+}
+
+.all-day-checkbox input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    accent-color: #5f97ba;
+}
+
+.datetime-inputs input[type="time"]:disabled {
+    background-color: #ebebec;
+    color: #ccc;
+    cursor: not-allowed;
+}

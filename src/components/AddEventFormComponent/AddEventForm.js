@@ -97,17 +97,16 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
                         required
                     />
                 </div>
-                {!isAllDay && (
-                    <div>
-                        <label>Start Time</label>
-                        <input
-                            type="time"
-                            value={startTime}
-                            onChange={(e) => setStartTime(e.target.value)}
-                            required
-                        />
-                    </div>
-                ) }
+                <div>
+                    <label>Start Time</label>
+                    <input
+                        type="time"
+                        value={startTime}
+                        onChange={(e) => setStartTime(e.target.value)}
+                        disabled={isAllDay}
+                        required={!isAllDay}
+                    />
+                </div>
             </div>
 
             <div className="datetime-inputs">
@@ -120,17 +119,16 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
                         required
                     />
                 </div>
-                {!isAllDay && (
-                    <div>
-                        <label>End Time</label>
-                        <input
-                            type="time"
-                            value={endTime}
-                            onChange={(e) => setEndTime(e.target.value)}
-                            required
-                        />
-                    </div>
-                ) }
+                <div>
+                    <label>End Time</label>
+                    <input
+                        type="time"
+                        value={endTime}
+                        onChange={(e) => setEndTime(e.target.value)}
+                        disabled={isAllDay}
+                        required={!isAllDay}
+                    />
+                </div>
             </div>
 
             <textarea
