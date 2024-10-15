@@ -11,8 +11,10 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
   const [endTime, setEndTime] = useState(initialEnd ? moment(initialEnd).format("HH:mm") : "");
   const [content, setContent] = useState("");
   const [error, setError] = useState("");
+  const [isAllDay, setIsAllDay] = useState(false);
 
-  useEffect(() => {
+
+    useEffect(() => {
       setStartDate(initialStart ? moment(initialStart).format("YYYY-MM-DD") : "");
       setStartTime(initialStart ? moment(initialStart).format("HH:mm") : "");
       setEndDate(initialEnd ? moment(initialEnd).format("YYYY-MM-DD") : "");
@@ -22,8 +24,8 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      const start = moment(`${startDate} ${startTime}`);
-      const end = moment(`${endDate} ${endTime}`);
+        const start = isAllDay ? moment(startDate).startOf("day") : moment(`${startDate} ${startTime}`);
+        const end = isAllDay ? moment(endDate).endOf("day") : moment(`${endDate} ${endTime}`);
 
       if (end.isBefore(start)) {
         setError("End time cannot be earlier than start time");
@@ -35,10 +37,11 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
         start: start.toDate(),
         end: end.toDate(),
         content,
+        isAllDay,
       });
       onClose();
     },
-    [title, startDate, startTime, endDate, endTime, content, onAddEvent, onClose]
+    [title, startDate, startTime, endDate, endTime, content, onAddEvent, onClose, isAllDay]
   );
 
   const handleCancel = () => {
@@ -49,14 +52,15 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
   };
 
   const handleAddEvent = async () => {
-    const start = moment(`${startDate} ${startTime}`);
-    const end = moment(`${endDate} ${endTime}`);
+    const start = isAllDay ? moment(startDate).startOf("day") : moment(`${startDate} ${startTime}`);
+    const end = isAllDay ? moment(endDate).endOf("day") : moment(`${endDate} ${endTime}`);
 
     const event = {
       title,
       start: moment(start).toDate(),
       end: moment(end).toDate(),
       content,
+        isAllDay,
     };
     await addNewEventToFirestore(event);
   };
@@ -69,10 +73,20 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
-                className="full-width" // Added class for full-width styling
+                className="full-width"
             />
 
-            {/* Separate Date and Time Pickers */}
+            <div className="all-day-checkbox">
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={isAllDay}
+                        onChange={(e) => setIsAllDay(e.target.checked)}
+                    />
+                    All-Day Event
+                </label>
+            </div>
+
             <div className="datetime-inputs">
                 <div>
                     <label>Start Date</label>
@@ -83,15 +97,17 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
                         required
                     />
                 </div>
-                <div>
-                    <label>Start Time</label>
-                    <input
-                        type="time"
-                        value={startTime}
-                        onChange={(e) => setStartTime(e.target.value)}
-                        required
-                    />
-                </div>
+                {!isAllDay && (
+                    <div>
+                        <label>Start Time</label>
+                        <input
+                            type="time"
+                            value={startTime}
+                            onChange={(e) => setStartTime(e.target.value)}
+                            required
+                        />
+                    </div>
+                ) }
             </div>
 
             <div className="datetime-inputs">
@@ -104,22 +120,24 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
                         required
                     />
                 </div>
-                <div>
-                    <label>End Time</label>
-                    <input
-                        type="time"
-                        value={endTime}
-                        onChange={(e) => setEndTime(e.target.value)}
-                        required
-                    />
-                </div>
+                {!isAllDay && (
+                    <div>
+                        <label>End Time</label>
+                        <input
+                            type="time"
+                            value={endTime}
+                            onChange={(e) => setEndTime(e.target.value)}
+                            required
+                        />
+                    </div>
+                ) }
             </div>
 
             <textarea
                 placeholder="Content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="full-width" // Added class for full-width styling
+                className="full-width"
             />
             {error && <p className="error-message">{error}</p>}
             <button type="submit" onClick={handleAddEvent}>
