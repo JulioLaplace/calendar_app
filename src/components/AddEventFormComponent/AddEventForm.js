@@ -81,7 +81,14 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
                     <input
                         type="checkbox"
                         checked={isAllDay}
-                        onChange={(e) => setIsAllDay(e.target.checked)}
+                        onChange={(e) => {
+                            setIsAllDay(e.target.checked);
+
+                            if (e.target.checked) {
+                                setStartTime("00:00");
+                                setEndTime("00:00");
+                            }
+                        }}
                     />
                     All-Day Event
                 </label>
