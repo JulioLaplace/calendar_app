@@ -17,6 +17,11 @@ function EventDetails({ event }) {
               <p><strong>Start Time:</strong> {moment(event.start).format("YYYY-MM-DD HH:mm")}</p>
               <p><strong>End Time:</strong> {moment(event.end).format("YYYY-MM-DD HH:mm")}</p>
               <p><strong>Content:</strong> {event.content}</p>
+
+              {/*Delete button */}
+              <button className="delete-event-button" onClick={onDelete}>
+                Delete Event
+              </button>
           </div>
       </div>
   );
