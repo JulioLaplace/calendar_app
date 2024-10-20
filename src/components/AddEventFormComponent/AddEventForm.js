@@ -57,6 +57,7 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
       start: moment(start).toDate(),
       end: moment(end).toDate(),
       content,
+      isDraggable: true,
     };
     await addNewEventToFirestore(event);
   };

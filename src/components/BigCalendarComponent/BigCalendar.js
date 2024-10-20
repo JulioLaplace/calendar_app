@@ -1,11 +1,15 @@
-import React from "react";
+import React, {useCallback} from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
+import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
+import "react-big-calendar/lib/addons/dragAndDrop/styles.css"
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./BigCalendar.css";
-import Toolbar from "../ToolbarComponent/Toolbar"; // import toolbar component  
+import Toolbar from "../ToolbarComponent/Toolbar";
 
 const localizer = momentLocalizer(moment);
+
+const DnDCalendar = withDragAndDrop(Calendar);
 
 moment.updateLocale('en', {
     week: {
@@ -14,8 +18,19 @@ moment.updateLocale('en', {
 });
 
 function BigCalendar({ events, onSelectEvent, onSelectSlot }) {
+
+  const onChangeEvent = useCallback((start, end, event_title) => {
+      for (let event of events){
+          if (event.title === event_title){
+              event.start = start;
+              event.end = end;
+              break
+          }
+      }
+  })
+
   return (
-    <Calendar
+    <DnDCalendar
       localizer={localizer}
       events={events}
       startAccessor="start"
@@ -25,8 +40,11 @@ function BigCalendar({ events, onSelectEvent, onSelectSlot }) {
       selectable={true}
       onSelectSlot={onSelectSlot}
       components={{
-        toolbar: Toolbar // 
+        toolbar: Toolbar
       }}
+      dragabbleAccessor={"isDraggable"}
+      onEventDrop={({start, end, event}) => {onChangeEvent(start, end, event.title)}}
+      onEventResize={({start, end, event}) => {onChangeEvent(start, end, event.title)}}
     />
   );
 }
