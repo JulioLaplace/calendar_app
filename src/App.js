@@ -81,8 +81,6 @@ function App() {
     setSelectedEvent(null);
   }, []);
 
-<<<<<<< Updated upstream
-=======
   const handleDeleteEvent = useCallback(async () => {
     if (selectedEvent) {
       setIsDeleting(true);
@@ -104,7 +102,6 @@ function App() {
     }
   }, [selectedEvent]);
 
->>>>>>> Stashed changes
   return (
     <div className="all-the-view-box">
       <div className="calendar-box">
