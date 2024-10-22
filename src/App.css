@@ -40,16 +40,18 @@
 .all-the-view-box {
   height: 100vh;
   display: flex;
+  overflow: hidden;
 }
 
 .calendar-box {
   flex: 1;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .event-overview-box {
   max-width: 300px;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   transition: transform 0.5s ease, width 0.5s ease;
   transform: translateX(100%);
 }
@@ -65,10 +67,10 @@
 }
 
 .toggle-overview-button {
-  position: absolute;
+  position:fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 1;
+  z-index: 1000;
   background-color: #074759;
   color: white;
   border: none;

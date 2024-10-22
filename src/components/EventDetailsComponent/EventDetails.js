@@ -2,7 +2,7 @@ import React from "react";
 import moment from "moment";
 import "./EventDetails.css";
 
-function EventDetails({ event }) {
+function EventDetails({ event, onEdit }) {
   if (!event) {
     return (
       <div className="no-event">
@@ -13,6 +13,9 @@ function EventDetails({ event }) {
 
   return (
     <div className="event-details">
+      <button onClick={onEdit} className="edit-button">
+        Edit
+      </button>
       <h3 className="event-title">{event.title}</h3>
 
       <div className="event-info">
@@ -40,7 +43,7 @@ function EventDetails({ event }) {
             {event.attendees.map((attendee) => attendee).join(", ")}
           </p>
         )}
-        {event.travelTime && (
+        {event.travelTime !=null && (
           <p>
             <strong>Travel Time:</strong> {event.travelTime}
           </p>
