@@ -115,6 +115,7 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
       />
 
       {/* Separate Date and Time Pickers */}
+      {/* Start date */}
       <div className="datetime-inputs">
         <div>
           <label>Start Date</label>
@@ -136,6 +137,7 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
         </div>
       </div>
 
+      {/* End date */}
       <div className="datetime-inputs">
         <div>
           <label>End Date</label>
@@ -159,7 +161,7 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
 
       {/* Content */}
       <textarea
-        placeholder="Content"
+        placeholder="Content (optional)"
         value={content}
         onChange={(e) => setContent(e.target.value)}
         className="full-width" // Added class for full-width styling
@@ -197,26 +199,28 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
           </div>
         ))}
 
-      <input
-        type="text"
-        placeholder="Attendees (optional)"
-        value={attendeeName}
-        onChange={(e) => setAttendeeName(e.target.value)}
-        defaultValue={""}
-        className="full-width"
-      />
+      <div className="attendee-row">
+        <input
+          type="text"
+          placeholder="Attendees (optional)"
+          value={attendeeName}
+          onChange={(e) => setAttendeeName(e.target.value)}
+          defaultValue={""}
+          className="full-width"
+        />
 
-      <button
-        type="button"
-        onClick={() => {
-          if (attendeeName) {
-            setAttendees([...attendees, attendeeName]);
-            setAttendeeName("");
-          }
-        }}
-      >
-        Add Attendee
-      </button>
+        <button
+          type="button"
+          onClick={() => {
+            if (attendeeName) {
+              setAttendees([...attendees, attendeeName]);
+              setAttendeeName("");
+            }
+          }}
+        >
+          +
+        </button>
+      </div>
 
       {/* Travel Time */}
       <input
