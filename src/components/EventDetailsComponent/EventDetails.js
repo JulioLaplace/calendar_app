@@ -2,7 +2,7 @@ import React from "react";
 import moment from "moment";
 import './EventDetails.css';
 
-function EventDetails({ event }) {
+function EventDetails({ event, onDelete }) {
   if (!event) {
     return <div className="no-event">
         No event selected. Click the calendar to add an event.

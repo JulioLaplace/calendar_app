@@ -49,3 +49,23 @@
     background-color: #ebebec;
     border-radius: 8px;
 }
+
+.delete-event-button {
+    margin-top: 20px;
+    padding: 8px 16px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .delete-event-button:hover {
+    background-color: #c82333;
+  }
+  
+  .delete-event-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }

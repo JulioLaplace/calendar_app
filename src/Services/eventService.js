@@ -1,7 +1,5 @@
 import {
   collection,
-  addDoc,
-  getDoc,
   getDocs,
   setDoc,
   doc,
@@ -45,11 +43,12 @@ export const editEventInFirestore = async (event) => {
 // Delete an event from firestore
 export const deleteEventFromFirestore = async (eventId) => {
   try {
-    const eventDoc = firestore.collection("events").doc(eventId);
-    await deleteDoc(doc(db, "events", eventId));
-    console.log("Document deleted with ID: ", eventId);
+    const eventRef = doc(db,'events',eventId);
+    await deleteDoc(eventRef);
+    return true;
+    //console.log("Document deleted with ID: ", eventId);
   } catch (error) {
-    console.error("Error deleting document: ", error);
+    console.error("Error deleting event: ", error);
     throw error;
   }
 };

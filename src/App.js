@@ -85,11 +85,8 @@ function App() {
   const handleDeleteEvent = useCallback(async () => {
     if (selectedEvent) {
       setIsDeleting(true);
-
       try {
-        
         await deleteEventFromFirestore(selectedEvent.id);
-
         setEvents((prevEvents) =>
           prevEvents.filter((event) => event.id !== selectedEvent.id)
         );
@@ -130,7 +127,8 @@ function App() {
           ) : (
             selectedEvent && (
               <>
-                <EventDetails event={selectedEvent} />
+                <EventDetails event={selectedEvent} 
+                onDelete={handleDeleteEvent}/>
                 {isDeleting && <p>Deleting event...</p>}
               </>
             )
