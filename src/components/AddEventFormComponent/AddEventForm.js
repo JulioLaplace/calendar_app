@@ -55,7 +55,6 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
         start: start.toDate(),
         end: end.toDate(),
         content,
-
         isAllDay,
         location,
         attendees,
@@ -148,15 +147,16 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
             onChange={(e) => setStartDate(e.target.value)}
             required
           />
-        </div>
+        </div>    
         <div>
-          <label>Start Time</label>
-          <input
-            type="time"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-            required
-          />
+           <label>Start Time</label>
+           <input
+             type="time"
+             value={startTime}
+             onChange={(e) => setStartTime(e.target.value)}
+             disabled={isAllDay}
+             required={!isAllDay}
+            />
         </div>
       </div>
 
@@ -176,9 +176,11 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
             type="time"
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
-            required
+            disabled={isAllDay}
+            required={!isAllDay}
           />
         </div>
+              
       </div>
 
       {/* Content */}
