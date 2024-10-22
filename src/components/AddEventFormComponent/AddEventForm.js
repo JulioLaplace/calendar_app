@@ -86,7 +86,7 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
 
                             if (e.target.checked) {
                                 setStartTime("00:00");
-                                setEndTime("00:00");
+                                setEndTime("23:59");
                             }
                         }}
                     />
