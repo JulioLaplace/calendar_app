@@ -28,11 +28,6 @@ function EventDetails({ event, onDelete }) {
           <p>
             <strong>Content:</strong> {event.content}
           </p>
-
-              {/*Delete button */}
-              <button className="delete-event-button" onClick={onDelete}>
-                Delete Event
-              </button>
         )}
         {event.location && (
           <p>
@@ -50,6 +45,9 @@ function EventDetails({ event, onDelete }) {
             <strong>Travel Time:</strong> {event.travelTime}
           </p>
         )}
+        <button className="delete-event-button" onClick={onDelete}>
+                Delete Event
+              </button>
       </div>
     </div>
   );
