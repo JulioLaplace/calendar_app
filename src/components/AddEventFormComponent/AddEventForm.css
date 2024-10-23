@@ -1,61 +1,87 @@
 .add-event-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 20px;
-    background-color: #ebebec;
-    border-radius: 8px;
-    max-width: 100%;
-    overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+  background-color: #ebebec;
+  border-radius: 8px;
+  max-width: 100%;
+  overflow: auto;
 }
 
 .full-width {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 14px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
 }
 
 .datetime-inputs {
-    display: flex;
-    gap: 10px;
-    align-items: center;
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .datetime-inputs div {
-    flex: 1;
+  flex: 1;
 }
 
 .datetime-inputs label {
-    font-size: 14px;
-    margin-right: 10px;
+  font-size: 14px;
+  margin-right: 10px;
 }
 
 textarea {
-    resize: vertical;
-    max-width: 100%;
-    box-sizing: border-box;
-    font-size: 14px;
+  resize: vertical;
+  max-width: 100%;
+  box-sizing: border-box;
+  font-size: 14px;
 }
 
 button {
-    padding: 10px;
-    font-size: 14px;
-    border: none;
-    border-radius: 4px;
-    background-color: #5f97ba;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  padding: 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: #5f97ba;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #074759;
+  background-color: #074759;
 }
 
 .error-message {
-    color: red;
-    font-size: 0.9em;
+  color: red;
+  font-size: 0.9em;
+}
+
+.attendee-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.remove-attendee-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  width: 20px;
+  height: 20px;
+  padding: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition: background-color 0.3s;
 }

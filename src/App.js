@@ -1,30 +1,33 @@
-import React, {useState, useCallback, useEffect} from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import BigCalendar from "./components/BigCalendarComponent/BigCalendar";
 import AddEventForm from "./components/AddEventFormComponent/AddEventForm";
 import EventDetails from "./components/EventDetailsComponent/EventDetails";
-import {getAllEventsFromFirestore} from "./Services/eventService";
-import './components/EventDetailsComponent/EventDetails.css';
+import { getAllEventsFromFirestore } from "./Services/eventService";
+import "./components/EventDetailsComponent/EventDetails.css";
 import moment from "moment";
 import "./App.css";
 
-const convert_events = (list_events) =>{
+const convert_events = (list_events) => {
   let list_events_calendar = [];
-  for (let event of list_events){
-    let calendarEvent= {
+  for (let event of list_events) {
+    let calendarEvent = {
       id: event.id,
       title: event.title,
       start: event.start.toDate(),
       end: event.end.toDate(),
       content: event.content,
+      location: event.location,
+      attendees: event.attendees,
+      travelTime: event.travelTime,
     };
     list_events_calendar.push(calendarEvent);
   }
   return list_events_calendar;
-}
+};
 
 function App() {
   useEffect(() => {
-    window.onbeforeunload = function() {
+    window.onbeforeunload = function () {
       return true;
     };
 
@@ -91,21 +94,28 @@ function App() {
       </div>
 
       <button
-          onClick={toggleEventOverview} className={`toggle-overview-button ${isEventOverviewOpen ? 'opened' : ''}`} >
-      </button>
+        onClick={toggleEventOverview}
+        className={`toggle-overview-button ${
+          isEventOverviewOpen ? "opened" : ""
+        }`}
+      ></button>
 
-      <div className={`event-overview-box ${isEventOverviewOpen ? 'open' : 'closed'}`}>
+      <div
+        className={`event-overview-box ${
+          isEventOverviewOpen ? "open" : "closed"
+        }`}
+      >
         <div className="event-overview">
           <div className="event-overview-title">Event Details</div>
           {isAddEventFormOpen ? (
-              <AddEventForm
-                  onAddEvent={handleAddEvent}
-                  onClose={handleCloseAddEventForm}
-                  initialStart={newEventStart}
-                  initialEnd={newEventEnd}
-              />
+            <AddEventForm
+              onAddEvent={handleAddEvent}
+              onClose={handleCloseAddEventForm}
+              initialStart={newEventStart}
+              initialEnd={newEventEnd}
+            />
           ) : (
-              <EventDetails event={selectedEvent} />
+            <EventDetails event={selectedEvent} />
           )}
         </div>
       </div>
