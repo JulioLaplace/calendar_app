@@ -45,13 +45,12 @@
 
 .calendar-box {
   flex: 1;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .event-overview-box {
   max-width: 300px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow:hidden;
   transition: transform 0.5s ease, width 0.5s ease;
   transform: translateX(100%);
 }
@@ -67,10 +66,10 @@
 }
 
 .toggle-overview-button {
-  position:fixed;
+  position:absolute;
   bottom: 20px;
   right: 20px;
-  z-index: 1000;
+  z-index: 1;
   background-color: #074759;
   color: white;
   border: none;
