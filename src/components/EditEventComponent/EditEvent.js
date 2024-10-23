@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { db } from '../../firebase';
 import { doc, updateDoc, Timestamp } from 'firebase/firestore';
+import  moment from 'moment-timezone';
+import './EditEvent.css';
+
+//set default timezone
+const TIMEZONE = 'Europe/Stockholm'
 
 const EditEvent = ({ event, onClose, onEventUpdated }) => {
   const [title, setTitle] = useState(event.title);
@@ -13,17 +18,17 @@ const EditEvent = ({ event, onClose, onEventUpdated }) => {
 
   function formatDateForInput(date) {
     if (date instanceof Date) {
-      return date.toISOString().slice(0, 16);
+      return moment(date).tz(TIMEZONE).format('YYYY-MM-DDTHH:mm');
     } else if (date instanceof Timestamp) {
-      return date.toDate().toISOString().slice(0, 16);
+      return moment(date.toDate()).tz(TIMEZONE).format('YYYY-MM-DDTHH:mm');
     } else if (typeof date === 'string') {
-      return new Date(date).toISOString().slice(0, 16);
+      return moment(date).tz(TIMEZONE).format('YYYY-MM-DDTHH:mm');
     }
     return '';
   }
 
   function parseInputDate(dateString) {
-    return new Date(dateString);
+    return moment.tz(dateString,TIMEZONE).toDate();
   }
 
   const handleSubmit = async (e) => {
@@ -31,6 +36,11 @@ const EditEvent = ({ event, onClose, onEventUpdated }) => {
 
     const startDate = parseInputDate(start);
     const endDate = parseInputDate(end);
+
+    if(endDate < startDate){
+      alert('End time must be after start time');
+      return;
+    }
     
     const updatedEvent = {
       ...event,
@@ -39,13 +49,19 @@ const EditEvent = ({ event, onClose, onEventUpdated }) => {
       location: location || '',
       attendees: attendees ? attendees.split(',').map(attendee => attendee.trim()) : [],
       travelTime: travelTime ? Number(travelTime) : null,
-      start: Timestamp.fromDate(startDate),
-      end: Timestamp.fromDate(endDate),
+      start: startDate,
+      end: endDate,
     };
 
     try {
+      //set up a new object for Firestore, including Timestamp 
+      const firestoreEvent ={
+        ...updatedEvent,
+        start: Timestamp.fromDate(startDate),
+        end: Timestamp.fromDate(endDate),
+      }
       const eventRef = doc(db, 'events', event.id);
-      await updateDoc(eventRef, updatedEvent);
+      await updateDoc(eventRef, firestoreEvent);
       onEventUpdated(updatedEvent);
       onClose();
     } catch (error){

@@ -93,8 +93,8 @@ function App() {
   },[]);
 
   const handleSelectSlot = useCallback(({ start, end }) => {
-    setNewEventStart(moment(start).format("YYYY-MM-DDTHH:mm"));
-    setNewEventEnd(moment(end).format("YYYY-MM-DDTHH:mm"));
+    setNewEventStart(moment(start).tz('Europe/Stockholm').format("YYYY-MM-DDTHH:mm"));
+    setNewEventEnd(moment(end).tz('Europe/Stockholm').format("YYYY-MM-DDTHH:mm"));
     setIsAddEventFormOpen(true);
     setIsEventOverviewOpen(true);
     setSelectedEvent(null);

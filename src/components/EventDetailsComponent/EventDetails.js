@@ -1,6 +1,8 @@
 import React from "react";
-import moment from "moment";
+import moment from "moment-timezone";
 import "./EventDetails.css";
+
+moment.tz.setDefault('Europe/Stockholm');
 
 function EventDetails({ event, onEdit }) {
   if (!event) {
@@ -10,6 +12,10 @@ function EventDetails({ event, onEdit }) {
       </div>
     );
   }
+
+  const formatDateTime = (date) => {
+    return moment(date).tz('Europe/Stockholm').format('YYYY-MM-DD HH:mm');
+  };
 
   return (
     <div className="event-details">
@@ -21,11 +27,11 @@ function EventDetails({ event, onEdit }) {
       <div className="event-info">
         <p>
           <strong>Start Time:</strong>{" "}
-          {moment(event.start).format("YYYY-MM-DD HH:mm")}
+          {formatDateTime(event.start)}
         </p>
         <p>
           <strong>End Time:</strong>{" "}
-          {moment(event.end).format("YYYY-MM-DD HH:mm")}
+          {formatDateTime(event.end)}
         </p>
         {event.content && (
           <p>
