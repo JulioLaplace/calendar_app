@@ -11,6 +11,7 @@ const convert_events = (list_events) =>{
   let list_events_calendar = [];
   for (let event of list_events){
     let calendarEvent= {
+      id: event.id,
       title: event.title,
       start: event.start.toDate(),
       end: event.end.toDate(),

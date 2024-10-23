@@ -6,6 +6,7 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./BigCalendar.css";
 import Toolbar from "../ToolbarComponent/Toolbar";
+import {editEventInFirestore} from "../../Services/eventService";
 
 const localizer = momentLocalizer(moment);
 
@@ -19,11 +20,12 @@ moment.updateLocale('en', {
 
 function BigCalendar({ events, onSelectEvent, onSelectSlot }) {
 
-  const onChangeEvent = useCallback((start, end, event_title) => {
-      for (let event of events){
-          if (event.title === event_title){
+  const onChangeEvent = useCallback(async (start, end, event_id) => {
+      for (let event of events) {
+          if (event.id === event_id) {
               event.start = start;
               event.end = end;
+              await editEventInFirestore(event)
               break
           }
       }
@@ -43,8 +45,8 @@ function BigCalendar({ events, onSelectEvent, onSelectSlot }) {
         toolbar: Toolbar
       }}
       dragabbleAccessor={"isDraggable"}
-      onEventDrop={({start, end, event}) => {onChangeEvent(start, end, event.title)}}
-      onEventResize={({start, end, event}) => {onChangeEvent(start, end, event.title)}}
+      onEventDrop={({start, end, event}) => {onChangeEvent(start, end, event.id)}}
+      onEventResize={({start, end, event}) => {onChangeEvent(start, end, event.id)}}
     />
   );
 }
