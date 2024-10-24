@@ -107,3 +107,8 @@ button:hover {
     color: #ccc;
     cursor: not-allowed;
 }
+.attendee-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}

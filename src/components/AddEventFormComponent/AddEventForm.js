@@ -40,26 +40,29 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
   }, [initialStart, initialEnd]);
 
   const handleSubmit = useCallback(
-    (e) => {
+    async (e) => {
       e.preventDefault();
         const start = isAllDay ? moment(startDate).startOf("day") : moment(`${startDate} ${startTime}`);
         const end = isAllDay ? moment(endDate).endOf("day") : moment(`${endDate} ${endTime}`);
 
-      if (end.isBefore(start)) {
-        setError("End time cannot be earlier than start time");
-        return;
-      }
-
-      onAddEvent({
+      const event = {
         title,
-        start: start.toDate(),
-        end: end.toDate(),
+        start: moment(start).toDate(),
+        end: moment(end).toDate(),
         content,
         isAllDay,
+        isDraggable: true,
         location,
         attendees,
         travelTime,
-      });
+      };
+      const event_id = await addNewEventToFirestore(event);
+      if (event_id != null) {
+        console.log("Event id added", event_id);
+        event.id = event_id;
+        console.log(event.id);
+      }
+      onAddEvent(event);
       onClose();
     },
     [
@@ -138,6 +141,7 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
         </div>
 
       {/* Separate Date and Time Pickers */}
+      {/* Start date */}
       <div className="datetime-inputs">
         <div>
           <label>Start Date</label>
@@ -160,6 +164,7 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
         </div>
       </div>
 
+      {/* End date */}
       <div className="datetime-inputs">
         <div>
           <label>End Date</label>
@@ -185,7 +190,7 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
 
       {/* Content */}
       <textarea
-        placeholder="Content"
+        placeholder="Content (optional)"
         value={content}
         onChange={(e) => setContent(e.target.value)}
         className="full-width" // Added class for full-width styling
@@ -222,26 +227,28 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
           </div>
         ))}
 
-      <input
-        type="text"
-        placeholder="Attendees (optional)"
-        value={attendeeName}
-        onChange={(e) => setAttendeeName(e.target.value)}
-        defaultValue={""}
-        className="full-width"
-      />
+      <div className="attendee-row">
+        <input
+          type="text"
+          placeholder="Attendees (optional)"
+          value={attendeeName}
+          onChange={(e) => setAttendeeName(e.target.value)}
+          defaultValue={""}
+          className="full-width"
+        />
 
-      <button
-        type="button"
-        onClick={() => {
-          if (attendeeName) {
-            setAttendees([...attendees, attendeeName]);
-            setAttendeeName("");
-          }
-        }}
-      >
-        Add Attendee
-      </button>
+        <button
+          type="button"
+          onClick={() => {
+            if (attendeeName) {
+              setAttendees([...attendees, attendeeName]);
+              setAttendeeName("");
+            }
+          }}
+        >
+          +
+        </button>
+      </div>
 
       {/* Travel Time */}
       <input
@@ -254,9 +261,7 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
       />
 
       {/* Add event button */}
-      <button type="submit" onClick={handleAddEvent}>
-        Add Event
-      </button>
+      <button type="submit">Add Event</button>
       {/* Cancel button */}
       <button type="button" onClick={handleCancel}>
         Cancel
