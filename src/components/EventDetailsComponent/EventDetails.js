@@ -2,7 +2,7 @@ import React from "react";
 import moment from "moment";
 import "./EventDetails.css";
 
-function EventDetails({ event }) {
+function EventDetails({ event, onDelete }) {
   if (!event) {
     return (
       <div className="no-event">
@@ -45,6 +45,9 @@ function EventDetails({ event }) {
             <strong>Travel Time:</strong> {event.travelTime}
           </p>
         )}
+        <button className="delete-event-button" onClick={onDelete}>
+                Delete Event
+              </button>
       </div>
     </div>
   );

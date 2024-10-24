@@ -2,8 +2,8 @@ import React, { useState, useCallback, useEffect } from "react";
 import BigCalendar from "./components/BigCalendarComponent/BigCalendar";
 import AddEventForm from "./components/AddEventFormComponent/AddEventForm";
 import EventDetails from "./components/EventDetailsComponent/EventDetails";
-import { getAllEventsFromFirestore } from "./Services/eventService";
-import "./components/EventDetailsComponent/EventDetails.css";
+import {getAllEventsFromFirestore, deleteEventFromFirestore} from "./Services/eventService";
+import './components/EventDetailsComponent/EventDetails.css';
 import moment from "moment";
 import "./App.css";
 
@@ -11,6 +11,7 @@ const convert_events = (list_events) => {
   let list_events_calendar = [];
   for (let event of list_events) {
     let calendarEvent = {
+      id: event.id,
       title: event.title,
       start: event.start.toDate(),
       end: event.end.toDate(),
@@ -44,6 +45,7 @@ function App() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [newEventStart, setNewEventStart] = useState("");
   const [newEventEnd, setNewEventEnd] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const toggleEventOverview = useCallback(() => {
     setIsEventOverviewOpen((prev) => !prev);
@@ -82,6 +84,24 @@ function App() {
     setSelectedEvent(null);
   }, []);
 
+  const handleDeleteEvent = useCallback(async () => {
+    if (selectedEvent) {
+      setIsDeleting(true);
+      try {
+        await deleteEventFromFirestore(selectedEvent.id);
+        setEvents((prevEvents) =>
+          prevEvents.filter((event) => event.id !== selectedEvent.id)
+        );
+        setSelectedEvent(null);
+        setIsEventOverviewOpen(false);
+      } catch (error) {
+        console.error("Error deleting event: ", error);
+      }finally{
+        setIsDeleting(false);
+      }
+    }
+  }, [selectedEvent]);
+
   return (
     <div className="all-the-view-box">
       <div className="calendar-box">
@@ -114,7 +134,13 @@ function App() {
               initialEnd={newEventEnd}
             />
           ) : (
-            <EventDetails event={selectedEvent} />
+            selectedEvent && (
+              <>
+                <EventDetails event={selectedEvent} 
+                onDelete={handleDeleteEvent}/>
+                {isDeleting && <p>Deleting event...</p>}
+              </>
+            )
           )}
         </div>
       </div>
