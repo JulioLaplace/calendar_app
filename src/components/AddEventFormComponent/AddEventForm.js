@@ -39,25 +39,28 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
   }, [initialStart, initialEnd]);
 
   const handleSubmit = useCallback(
-    (e) => {
+    async (e) => {
       e.preventDefault();
       const start = moment(`${startDate} ${startTime}`);
       const end = moment(`${endDate} ${endTime}`);
 
-      if (end.isBefore(start)) {
-        setError("End time cannot be earlier than start time");
-        return;
-      }
-
-      onAddEvent({
+      const event = {
         title,
-        start: start.toDate(),
-        end: end.toDate(),
+        start: moment(start).toDate(),
+        end: moment(end).toDate(),
         content,
+        isDraggable: true,
         location,
         attendees,
         travelTime,
-      });
+      };
+      const event_id = await addNewEventToFirestore(event);
+      if (event_id != null) {
+        console.log("Event id added", event_id);
+        event.id = event_id;
+        console.log(event.id);
+      }
+      onAddEvent(event);
       onClose();
     },
     [
@@ -84,22 +87,6 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
     setTravelTime("");
     setError("");
     onClose();
-  };
-
-  const handleAddEvent = async () => {
-    const start = moment(`${startDate} ${startTime}`);
-    const end = moment(`${endDate} ${endTime}`);
-
-    const event = {
-      title,
-      start: moment(start).toDate(),
-      end: moment(end).toDate(),
-      content,
-      location,
-      attendees,
-      travelTime,
-    };
-    await addNewEventToFirestore(event);
   };
 
   return (
@@ -233,9 +220,7 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
       />
 
       {/* Add event button */}
-      <button type="submit" onClick={handleAddEvent}>
-        Add Event
-      </button>
+      <button type="submit">Add Event</button>
       {/* Cancel button */}
       <button type="button" onClick={handleCancel}>
         Cancel
