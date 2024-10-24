@@ -26,14 +26,17 @@ export const addNewEventToFirestore = async (event) => {
     await setDoc(docRef, event);
     // const docRef = await addDoc(collectionRef, event);
     console.log("Document written with ID: ", docRef.id);
+    return generatedId;
   } catch (e) {
     console.error("Error adding document: ", e);
+    return null;
   }
 };
 
 // Edit an existing event in firestore
 export const editEventInFirestore = async (event) => {
   try {
+    console.log(event.id)
     const eventRef = doc(db, "events", event.id);
     await updateDoc(eventRef, event);
     console.log("Document updated with ID: ", event.id);

@@ -20,11 +20,13 @@ moment.updateLocale('en', {
 
 function BigCalendar({ events, onSelectEvent, onSelectSlot }) {
 
-  const onChangeEvent = useCallback(async (start, end, event_id) => {
+  const onChangeEvent = useCallback(async (start, end, event_selected) => {
+      console.log(event_selected.id);
       for (let event of events) {
-          if (event.id === event_id) {
+          if (event.id === event_selected.id) {
               event.start = start;
               event.end = end;
+              console.log(event)
               await editEventInFirestore(event)
               break
           }
@@ -45,8 +47,8 @@ function BigCalendar({ events, onSelectEvent, onSelectSlot }) {
         toolbar: Toolbar
       }}
       dragabbleAccessor={"isDraggable"}
-      onEventDrop={({start, end, event}) => {onChangeEvent(start, end, event.id)}}
-      onEventResize={({start, end, event}) => {onChangeEvent(start, end, event.id)}}
+      onEventDrop={({start, end, event}) => {onChangeEvent(start, end, event)}}
+      onEventResize={({start, end, event}) => {onChangeEvent(start, end, event)}}
     />
   );
 }

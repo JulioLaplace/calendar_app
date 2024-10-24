@@ -30,6 +30,8 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
   const [travelTime, setTravelTime] = useState("");
   // Error message
   const [error, setError] = useState("");
+  // Id of the event
+  const [id, setId] = useState("");
 
   useEffect(() => {
     setStartDate(initialStart ? moment(initialStart).format("YYYY-MM-DD") : "");
@@ -54,6 +56,7 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
         start: start.toDate(),
         end: end.toDate(),
         content,
+        id,
         location,
         attendees,
         travelTime,
@@ -100,7 +103,12 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
       attendees,
       travelTime,
     };
-    await addNewEventToFirestore(event);
+    const event_id = await addNewEventToFirestore(event);
+    if (event_id != null){
+        console.log("Event id added", event_id)
+        setId(event_id);
+        console.log(event.id)
+      }
   };
 
   return (
