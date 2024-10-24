@@ -134,13 +134,11 @@ function App() {
               initialEnd={newEventEnd}
             />
           ) : (
-            selectedEvent && (
               <>
                 <EventDetails event={selectedEvent} 
                 onDelete={handleDeleteEvent}/>
                 {isDeleting && <p>Deleting event...</p>}
               </>
-            )
           )}
         </div>
       </div>
