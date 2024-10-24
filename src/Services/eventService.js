@@ -36,7 +36,11 @@ export const addNewEventToFirestore = async (event) => {
 // Edit an existing event in firestore
 export const editEventInFirestore = async (event) => {
   try {
-    console.log(event.id)
+    // Remove all undefined fields from the event object
+    Object.keys(event).forEach(
+      (key) => event[key] === undefined && delete event[key]
+    );
+    console.log(event.id);
     const eventRef = doc(db, "events", event.id);
     await updateDoc(eventRef, event);
     console.log("Document updated with ID: ", event.id);
@@ -61,9 +65,9 @@ export const getAllEventsFromFirestore = async () => {
   try {
     const collectionRef = collection(db, "events");
     const querySnapshot = await getDocs(collectionRef);
-    querySnapshot.forEach((doc => {
-      events.push(doc.data())
-    }))
+    querySnapshot.forEach((doc) => {
+      events.push(doc.data());
+    });
     return events;
   } catch (e) {
     console.error("Error getting documents: ", e);
