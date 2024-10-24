@@ -49,7 +49,7 @@ function EventDetails({ event, onEdit, onDelete }) {
             {event.attendees.map((attendee) => attendee).join(", ")}
           </p>
         )}
-        {event.travelTime !=null && (
+        {event.travelTime  && event.travelTime !== "" && (
           <p>
             <strong>Travel Time:</strong> {event.travelTime}
           </p>
