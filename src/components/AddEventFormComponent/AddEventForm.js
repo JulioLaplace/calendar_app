@@ -30,6 +30,7 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
   const [travelTime, setTravelTime] = useState("");
   // Error message
   const [error, setError] = useState("");
+  const [isAllDay, setIsAllDay] = useState(false);
 
   useEffect(() => {
     setStartDate(initialStart ? moment(initialStart).format("YYYY-MM-DD") : "");
@@ -41,14 +42,15 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
-      const start = moment(`${startDate} ${startTime}`);
-      const end = moment(`${endDate} ${endTime}`);
+        const start = isAllDay ? moment(startDate).startOf("day") : moment(`${startDate} ${startTime}`);
+        const end = isAllDay ? moment(endDate).endOf("day") : moment(`${endDate} ${endTime}`);
 
       const event = {
         title,
         start: moment(start).toDate(),
         end: moment(end).toDate(),
         content,
+        isAllDay,
         isDraggable: true,
         location,
         attendees,
@@ -75,7 +77,9 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
       travelTime,
       onAddEvent,
       onClose,
+      isAllDay,
     ]
+
   );
 
   const handleCancel = () => {
@@ -89,8 +93,26 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
     onClose();
   };
 
+  const handleAddEvent = async () => {
+    const start = isAllDay ? moment(startDate).startOf("day") : moment(`${startDate} ${startTime}`);
+    const end = isAllDay ? moment(endDate).endOf("day") : moment(`${endDate} ${endTime}`);
+
+    const event = {
+      title,
+      start: moment(start).toDate(),
+      end: moment(end).toDate(),
+      content,
+      isAllDay,
+      location,
+      attendees,
+      travelTime,
+    };
+    await addNewEventToFirestore(event);
+  };
+
   return (
     <form onSubmit={handleSubmit} className="add-event-form">
+
       {/* Title */}
       <input
         type="text"
@@ -100,6 +122,23 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
         required
         className="full-width" // Added class for full-width styling
       />
+       <div className="all-day-checkbox">
+            <label>
+                 <input
+                     type="checkbox"
+                     checked={isAllDay}
+                     onChange={(e) => {
+                        setIsAllDay(e.target.checked);
+
+                         if (e.target.checked) {
+                            setStartTime("00:00");
+                            setEndTime("23:59");
+                          }
+                     }}
+                  />
+                    All-Day Event
+            </label>
+        </div>
 
       {/* Separate Date and Time Pickers */}
       {/* Start date */}
@@ -112,15 +151,16 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
             onChange={(e) => setStartDate(e.target.value)}
             required
           />
-        </div>
+        </div>    
         <div>
-          <label>Start Time</label>
-          <input
-            type="time"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-            required
-          />
+           <label>Start Time</label>
+           <input
+             type="time"
+             value={startTime}
+             onChange={(e) => setStartTime(e.target.value)}
+             disabled={isAllDay}
+             required={!isAllDay}
+            />
         </div>
       </div>
 
@@ -141,9 +181,11 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
             type="time"
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
-            required
+            disabled={isAllDay}
+            required={!isAllDay}
           />
         </div>
+              
       </div>
 
       {/* Content */}
@@ -181,7 +223,6 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
                 setAttendees(attendees.filter((_, i) => i !== index))
               }
             >
-              ✖
             </button>
           </div>
         ))}
