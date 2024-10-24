@@ -1,7 +1,5 @@
 import {
   collection,
-  addDoc,
-  getDoc,
   getDocs,
   setDoc,
   doc,
@@ -40,7 +38,6 @@ export const editEventInFirestore = async (event) => {
     Object.keys(event).forEach(
       (key) => event[key] === undefined && delete event[key]
     );
-    console.log(event.id);
     const eventRef = doc(db, "events", event.id);
     await updateDoc(eventRef, event);
     console.log("Document updated with ID: ", event.id);

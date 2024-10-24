@@ -20,12 +20,10 @@ moment.updateLocale("en", {
 
 function BigCalendar({ events, onSelectEvent, onSelectSlot }) {
   const onChangeEvent = useCallback(async (start, end, event_selected) => {
-    console.log(event_selected.id);
     for (let event of events) {
       if (event.id === event_selected.id) {
         event.start = start;
         event.end = end;
-        console.log(event);
         await editEventInFirestore(event);
         break;
       }

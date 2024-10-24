@@ -30,8 +30,6 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
   const [travelTime, setTravelTime] = useState("");
   // Error message
   const [error, setError] = useState("");
-  // Id of the event
-  const [id, setId] = useState("");
 
   useEffect(() => {
     setStartDate(initialStart ? moment(initialStart).format("YYYY-MM-DD") : "");
