@@ -4,6 +4,7 @@ import { doc, updateDoc, Timestamp } from 'firebase/firestore';
 import moment from 'moment-timezone';
 import '../AddEventFormComponent/AddEventForm.css';
 
+moment.tz.setDefault('Europe/Stockholm');
 const EditEvent = ({ event, onClose, onEventUpdated }) => {
   const [title, setTitle] = useState(event.title);
   const [startDate, setStartDate] = useState(moment(event.start).format("YYYY-MM-DD"));
