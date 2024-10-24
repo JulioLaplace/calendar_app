@@ -2,11 +2,13 @@ import React, { useCallback } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import moment from "moment";
+import moment from "moment-timezone";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./BigCalendar.css";
-import Toolbar from "../ToolbarComponent/Toolbar";
 import { editEventInFirestore } from "../../Services/eventService";
+import Toolbar from "../ToolbarComponent/Toolbar"; // import toolbar component  
+
+moment.tz.setDefault('Europe/Stockholm');
 
 const localizer = momentLocalizer(moment);
 

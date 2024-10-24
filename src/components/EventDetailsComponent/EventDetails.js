@@ -1,8 +1,10 @@
 import React from "react";
-import moment from "moment";
+import moment from "moment-timezone";
 import "./EventDetails.css";
 
-function EventDetails({ event, onDelete }) {
+moment.tz.setDefault('Europe/Stockholm');
+
+function EventDetails({ event, onEdit, onDelete }) {
   if (!event) {
     return (
       <div className="no-event">
@@ -11,18 +13,25 @@ function EventDetails({ event, onDelete }) {
     );
   }
 
+  const formatDateTime = (date) => {
+    return moment(date).tz('Europe/Stockholm').format('YYYY-MM-DD HH:mm');
+  };
+
   return (
     <div className="event-details">
+      <button onClick={onEdit} className="edit-button">
+        Edit
+      </button>
       <h3 className="event-title">{event.title}</h3>
 
       <div className="event-info">
         <p>
           <strong>Start Time:</strong>{" "}
-          {moment(event.start).format("YYYY-MM-DD HH:mm")}
+          {formatDateTime(event.start)}
         </p>
         <p>
           <strong>End Time:</strong>{" "}
-          {moment(event.end).format("YYYY-MM-DD HH:mm")}
+          {formatDateTime(event.end)}
         </p>
         {event.content && (
           <p>
@@ -40,7 +49,7 @@ function EventDetails({ event, onDelete }) {
             {event.attendees.map((attendee) => attendee).join(", ")}
           </p>
         )}
-        {event.travelTime && (
+        {event.travelTime  && event.travelTime !== "" && (
           <p>
             <strong>Travel Time:</strong> {event.travelTime}
           </p>
