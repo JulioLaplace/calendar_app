@@ -3,8 +3,8 @@ import BigCalendar from "./components/BigCalendarComponent/BigCalendar";
 import AddEventForm from "./components/AddEventFormComponent/AddEventForm";
 import EventDetails from "./components/EventDetailsComponent/EventDetails";
 import EditEvent from "./components/EditEventComponent/EditEvent";
-import { getAllEventsFromFirestore } from "./Services/eventService";
-import "./components/EventDetailsComponent/EventDetails.css";
+import {getAllEventsFromFirestore, deleteEventFromFirestore} from "./Services/eventService";
+import './components/EventDetailsComponent/EventDetails.css';
 import moment from "moment";
 import "./App.css";
 
@@ -47,6 +47,7 @@ function App() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [newEventStart, setNewEventStart] = useState("");
   const [newEventEnd, setNewEventEnd] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const toggleEventOverview = useCallback(() => {
     if(!isEventOverviewOpen){
@@ -107,6 +108,24 @@ function App() {
     setSelectedEvent(null);
   }, []);
 
+  const handleDeleteEvent = useCallback(async () => {
+    if (selectedEvent) {
+      setIsDeleting(true);
+      try {
+        await deleteEventFromFirestore(selectedEvent.id);
+        setEvents((prevEvents) =>
+          prevEvents.filter((event) => event.id !== selectedEvent.id)
+        );
+        setSelectedEvent(null);
+        setIsEventOverviewOpen(false);
+      } catch (error) {
+        console.error("Error deleting event: ", error);
+      }finally{
+        setIsDeleting(false);
+      }
+    }
+  }, [selectedEvent]);
+
   return (
     <div className="all-the-view-box">
       <div className="calendar-box">
@@ -145,10 +164,16 @@ function App() {
               onEventUpdated={handleEventUpdate}
             />
           ) : (
-            <EventDetails 
+            selectedEvent && (
+              <>
+                <EventDetails 
               event={selectedEvent} 
               onEdit={handleEditEvent}
-            />
+            
+                onDelete={handleDeleteEvent}/>
+                {isDeleting && <p>Deleting event...</p>}
+              </>
+            )
           )}
         </div>
       </div>

@@ -32,6 +32,7 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
   const [travelTime, setTravelTime] = useState("");
   // Error message
   const [error, setError] = useState("");
+  const [isAllDay, setIsAllDay] = useState(false);
 
   useEffect(() => {
     setStartDate(initialStart ? moment(initialStart).format("YYYY-MM-DD") : "");
@@ -41,25 +42,29 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
   }, [initialStart, initialEnd]);
 
   const handleSubmit = useCallback(
-    (e) => {
+    async (e) => {
       e.preventDefault();
-      const start = moment(`${startDate} ${startTime}`);
-      const end = moment(`${endDate} ${endTime}`);
+        const start = isAllDay ? moment(startDate).startOf("day") : moment(`${startDate} ${startTime}`);
+        const end = isAllDay ? moment(endDate).endOf("day") : moment(`${endDate} ${endTime}`);
 
-      if (end.isBefore(start)) {
-        setError("End time cannot be earlier than start time");
-        return;
-      }
-
-      onAddEvent({
+      const event = {
         title,
-        start: start.toDate(),
-        end: end.toDate(),
+        start: moment(start).toDate(),
+        end: moment(end).toDate(),
         content,
+        isAllDay,
+        isDraggable: true,
         location,
         attendees,
         travelTime,
-      });
+      };
+      const event_id = await addNewEventToFirestore(event);
+      if (event_id != null) {
+        console.log("Event id added", event_id);
+        event.id = event_id;
+        console.log(event.id);
+      }
+      onAddEvent(event);
       onClose();
     },
     [
@@ -74,7 +79,9 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
       travelTime,
       onAddEvent,
       onClose,
+      isAllDay,
     ]
+
   );
 
   const handleCancel = () => {
@@ -89,14 +96,15 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
   };
 
   const handleAddEvent = async () => {
-    const start = moment(`${startDate} ${startTime}`);
-    const end = moment(`${endDate} ${endTime}`);
+    const start = isAllDay ? moment(startDate).startOf("day") : moment(`${startDate} ${startTime}`);
+    const end = isAllDay ? moment(endDate).endOf("day") : moment(`${endDate} ${endTime}`);
 
     const event = {
       title,
       start: moment(start).toDate(),
       end: moment(end).toDate(),
       content,
+      isAllDay,
       location,
       attendees,
       travelTime,
@@ -106,6 +114,7 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
 
   return (
     <form onSubmit={handleSubmit} className="add-event-form">
+
       {/* Title */}
       <input
         type="text"
@@ -115,8 +124,26 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
         required
         className="full-width" // Added class for full-width styling
       />
+       <div className="all-day-checkbox">
+            <label>
+                 <input
+                     type="checkbox"
+                     checked={isAllDay}
+                     onChange={(e) => {
+                        setIsAllDay(e.target.checked);
+
+                         if (e.target.checked) {
+                            setStartTime("00:00");
+                            setEndTime("23:59");
+                          }
+                     }}
+                  />
+                    All-Day Event
+            </label>
+        </div>
 
       {/* Separate Date and Time Pickers */}
+      {/* Start date */}
       <div className="datetime-inputs">
         <div>
           <label>Start Date</label>
@@ -126,18 +153,20 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
             onChange={(e) => setStartDate(e.target.value)}
             required
           />
-        </div>
+        </div>    
         <div>
-          <label>Start Time</label>
-          <input
-            type="time"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-            required
-          />
+           <label>Start Time</label>
+           <input
+             type="time"
+             value={startTime}
+             onChange={(e) => setStartTime(e.target.value)}
+             disabled={isAllDay}
+             required={!isAllDay}
+            />
         </div>
       </div>
 
+      {/* End date */}
       <div className="datetime-inputs">
         <div>
           <label>End Date</label>
@@ -154,14 +183,16 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
             type="time"
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
-            required
+            disabled={isAllDay}
+            required={!isAllDay}
           />
         </div>
+              
       </div>
 
       {/* Content */}
       <textarea
-        placeholder="Content"
+        placeholder="Content (optional)"
         value={content}
         onChange={(e) => setContent(e.target.value)}
         className="full-width" // Added class for full-width styling
@@ -194,31 +225,32 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
                 setAttendees(attendees.filter((_, i) => i !== index))
               }
             >
-              ✖
             </button>
           </div>
         ))}
 
-      <input
-        type="text"
-        placeholder="Attendees (optional)"
-        value={attendeeName}
-        onChange={(e) => setAttendeeName(e.target.value)}
-        defaultValue={""}
-        className="full-width"
-      />
+      <div className="attendee-row">
+        <input
+          type="text"
+          placeholder="Attendees (optional)"
+          value={attendeeName}
+          onChange={(e) => setAttendeeName(e.target.value)}
+          defaultValue={""}
+          className="full-width"
+        />
 
-      <button
-        type="button"
-        onClick={() => {
-          if (attendeeName) {
-            setAttendees([...attendees, attendeeName]);
-            setAttendeeName("");
-          }
-        }}
-      >
-        Add Attendee
-      </button>
+        <button
+          type="button"
+          onClick={() => {
+            if (attendeeName) {
+              setAttendees([...attendees, attendeeName]);
+              setAttendeeName("");
+            }
+          }}
+        >
+          +
+        </button>
+      </div>
 
       {/* Travel Time */}
       <input
@@ -231,9 +263,7 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
       />
 
       {/* Add event button */}
-      <button type="submit" onClick={handleAddEvent}>
-        Add Event
-      </button>
+      <button type="submit">Add Event</button>
       {/* Cancel button */}
       <button type="button" onClick={handleCancel}>
         Cancel

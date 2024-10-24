@@ -4,7 +4,7 @@ import "./EventDetails.css";
 
 moment.tz.setDefault('Europe/Stockholm');
 
-function EventDetails({ event, onEdit }) {
+function EventDetails({ event, onEdit, onDelete }) {
   if (!event) {
     return (
       <div className="no-event">
@@ -54,6 +54,9 @@ function EventDetails({ event, onEdit }) {
             <strong>Travel Time:</strong> {event.travelTime}
           </p>
         )}
+        <button className="delete-event-button" onClick={onDelete}>
+                Delete Event
+              </button>
       </div>
     </div>
   );
