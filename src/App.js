@@ -101,13 +101,6 @@ function App() {
     setSelectedEvent(null);
   }, []);
 
-  const handleCloseAddEventForm = useCallback(() => {
-    setIsAddEventFormOpen(false);
-    setNewEventStart("");
-    setNewEventEnd("");
-    setSelectedEvent(null);
-  }, []);
-
   const handleDeleteEvent = useCallback(async () => {
     if (selectedEvent) {
       setIsDeleting(true);
@@ -153,7 +146,7 @@ function App() {
           {isAddEventFormOpen ? (
             <AddEventForm
               onAddEvent={handleAddEvent}
-              onClose={handleCloseAddEventForm}
+              onClose={toggleEventOverview}
               initialStart={newEventStart}
               initialEnd={newEventEnd}
             />
@@ -164,7 +157,6 @@ function App() {
               onEventUpdated={handleEventUpdate}
             />
           ) : (
-            selectedEvent && (
               <>
                 <EventDetails 
               event={selectedEvent} 
@@ -173,7 +165,6 @@ function App() {
                 onDelete={handleDeleteEvent}/>
                 {isDeleting && <p>Deleting event...</p>}
               </>
-            )
           )}
         </div>
       </div>

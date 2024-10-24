@@ -94,24 +94,6 @@ function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
     setError("");
     onClose();
   };
-
-  const handleAddEvent = async () => {
-    const start = isAllDay ? moment(startDate).startOf("day") : moment(`${startDate} ${startTime}`);
-    const end = isAllDay ? moment(endDate).endOf("day") : moment(`${endDate} ${endTime}`);
-
-    const event = {
-      title,
-      start: moment(start).toDate(),
-      end: moment(end).toDate(),
-      content,
-      isAllDay,
-      location,
-      attendees,
-      travelTime,
-    };
-    await addNewEventToFirestore(event);
-  };
-
   return (
     <form onSubmit={handleSubmit} className="add-event-form">
 
