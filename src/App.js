@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import BigCalendar from "./components/BigCalendarComponent/BigCalendar";
 import AddEventForm from "./components/AddEventFormComponent/AddEventForm";
 import EventDetails from "./components/EventDetailsComponent/EventDetails";
+import EditEvent from "./components/EditEventComponent/EditEvent";
 import {getAllEventsFromFirestore, deleteEventFromFirestore} from "./Services/eventService";
 import './components/EventDetailsComponent/EventDetails.css';
 import moment from "moment";
@@ -41,6 +42,7 @@ function App() {
   }, []);
   const [isEventOverviewOpen, setIsEventOverviewOpen] = useState(false);
   const [isAddEventFormOpen, setIsAddEventFormOpen] = useState(false);
+  const [isEditEventFormOpen,setIsEditEventFormOpen] = useState(false);
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [newEventStart, setNewEventStart] = useState("");
@@ -48,12 +50,14 @@ function App() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const toggleEventOverview = useCallback(() => {
-    setIsEventOverviewOpen((prev) => !prev);
-    setIsAddEventFormOpen(false);
-    setSelectedEvent(null);
-    setNewEventStart("");
-    setNewEventEnd("");
-  }, []);
+    if(!isEventOverviewOpen){
+      setIsAddEventFormOpen(false);
+      setSelectedEvent(null);
+      setNewEventStart("");
+      setNewEventEnd("");
+    }
+    setIsEventOverviewOpen(!isEventOverviewOpen);
+  }, [isEventOverviewOpen]);
 
   const handleAddEvent = useCallback((newEvent) => {
     setEvents((prev) => [...prev, newEvent]);
@@ -65,13 +69,33 @@ function App() {
     setSelectedEvent(event);
     setIsEventOverviewOpen(true);
     setIsAddEventFormOpen(false);
+    setIsEditEventFormOpen(false);
     setNewEventStart("");
     setNewEventEnd("");
   }, []);
 
+  const handleEventUpdate = useCallback((updatedEvent) => {
+    const updatedCalendarEvent = {
+      ...updatedEvent,
+      start:updatedEvent.start instanceof Date ? updatedEvent.start : updatedEvent.start.toDate(),
+      end: updatedEvent.end  instanceof Date ? updatedEvent.end : updatedEvent.end.toDate()
+    };
+    setEvents((prevEvents) =>
+      prevEvents.map((event) =>
+        event.id === updatedEvent.id ? updatedCalendarEvent : event
+      )
+    );
+    setSelectedEvent(updatedCalendarEvent);
+    setIsEditEventFormOpen(false);
+  }, []);
+
+  const handleEditEvent = useCallback(() => {
+    setIsEditEventFormOpen(true);
+  },[]);
+
   const handleSelectSlot = useCallback(({ start, end }) => {
-    setNewEventStart(moment(start).format("YYYY-MM-DDTHH:mm"));
-    setNewEventEnd(moment(end).format("YYYY-MM-DDTHH:mm"));
+    setNewEventStart(moment(start).tz('Europe/Stockholm').format("YYYY-MM-DDTHH:mm"));
+    setNewEventEnd(moment(end).tz('Europe/Stockholm').format("YYYY-MM-DDTHH:mm"));
     setIsAddEventFormOpen(true);
     setIsEventOverviewOpen(true);
     setSelectedEvent(null);
@@ -126,9 +150,18 @@ function App() {
               initialStart={newEventStart}
               initialEnd={newEventEnd}
             />
+          ) : isEditEventFormOpen ? (
+            <EditEvent
+              event={selectedEvent}
+              onClose={()=> setIsEditEventFormOpen(false)}
+              onEventUpdated={handleEventUpdate}
+            />
           ) : (
               <>
-                <EventDetails event={selectedEvent} 
+                <EventDetails 
+              event={selectedEvent} 
+              onEdit={handleEditEvent}
+            
                 onDelete={handleDeleteEvent}/>
                 {isDeleting && <p>Deleting event...</p>}
               </>

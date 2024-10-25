@@ -1,7 +1,9 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { addNewEventToFirestore } from "../../Services/eventService";
-import moment from "moment";
+import moment from "moment-timezone";
 import "./AddEventForm.css";
+
+moment.tz.setDefault('Europe/Stockholm');
 
 function AddEventForm({ onAddEvent, onClose, initialStart, initialEnd }) {
   // Title of the event
